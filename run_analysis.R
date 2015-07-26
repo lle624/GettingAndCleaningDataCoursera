@@ -13,14 +13,17 @@ if (!file.exists("UCI HAR Dataset")) {
 }
 
 # 1. Merge the training and test sets to create one data set
+##Load the training data
 x_train <- read.table("train/X_train.txt")
 y_train <- read.table("train/y_train.txt")
 subject_train <- read.table("train/subject_train.txt")
 
+##Load the test data
 x_test <- read.table("test/X_test.txt")
 y_test <- read.table("test/y_test.txt")
 subject_test <- read.table("test/subject_test.txt")
 
+##Combines the training and test sets into one dataset
 x_data <- rbind(x_train, x_test)
 y_data <- rbind(y_train, y_test)
 subject_data <- rbind(subject_train, subject_test)
