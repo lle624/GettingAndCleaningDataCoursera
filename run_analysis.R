@@ -5,11 +5,11 @@ library(plyr)
 # Obtain the data and unzip the data
 filename <- "getdata_dataset.zip"
 if (!file.exists(filename)){
-  fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip "
-  download.file(fileURL, filename, method="curl")
+    fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip "
+    download.file(fileURL, filename, method="curl")
 }  
 if (!file.exists("UCI HAR Dataset")) { 
-  unzip(filename) 
+    unzip(filename) 
 }
 
 # 1. Merge the training and test sets to create one data set
@@ -24,28 +24,25 @@ y_test <- read.table("test/y_test.txt")
 subject_test <- read.table("test/subject_test.txt")
 
 ##Combines the training and test sets into one dataset
-x_data <- rbind(x_train, x_test)
-y_data <- rbind(y_train, y_test)
-subject_data <- rbind(subject_train, subject_test)
+x_all <- rbind(x_train, x_test)
+y_all <- rbind(y_train, y_test)
+subject_all <- rbind(subject_train, subject_test)
 
 # 2. Extract only the measurements on the mean and standard deviation for each measurement
 features <- read.table("features.txt")
-mean_and_std_features <- grep("-(mean|std)\\(\\)", features[, 2])
-x_data <- x_data[, mean_and_std_features]
-names(x_data) <- features[mean_and_std_features, 2]
+mean_sd_features <- grep("-(mean|std)\\(\\)", features[, 2])
+x_all <- x_all[, mean_sd_features]
+names(x_all) <- features[mean_sd_features, 2]
 
 # 3. Use descriptive activity names to name the activities in the data set
-activities <- read.table("activity_labels.txt")
-y_data[, 1] <- activities[y_data[, 1], 2]
-names(y_data) <- "activity"
+activity_labels <- read.table("activity_labels.txt")
+y_all[, 1] <- activity_labels[y_all[, 1], 2]
+names(y_all) <- "activity"
 
 # 4. Appropriately label the data set with descriptive variable names
-names(subject_data) <- "subject"
-
-all_data <- cbind(x_data, y_data, subject_data)
+names(subject_all) <- "subject"
+all_data <- cbind(x_all, y_all, subject_all)
 
 # 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-averages_data <- ddply(all_data, .(subject, activity), function(x) colMeans(x[, 1:66]))
-
-write.table(averages_data, "averages_data.txt", row.name=FALSE)
-
+tidydata <- ddply(all_data, .(subject, activity), function(x) colMeans(x[, 1:66]))
+write.table(tidydata, "mytidydata.txt", row.name=FALSE)
