@@ -1,3 +1,7 @@
+#The working directory should be set to the proper location
+getwd()
+setwd("./UCR HAR Dataset")
+
 # If the package "plyr" does not already exist, then install.packages("plyr")
 # Load the necessary libraries
 library(plyr)
